@@ -13,7 +13,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 import Papa from 'papaparse';
-import Dropzone from 'react-dropzone';
+import BoxAndViolinChart from '../../components/BoxAndViolinChart';
 
 export default class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -25,15 +25,14 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
   }
 
   handleFileSelect(evt) {
-    console.log('handleFileSelect');
     const file = evt.target.files[0];
     Papa.parse(file, {
-      delimiter: "\t",
+      delimiter: '\t',
       header: true,
-      complete: (results, file) => {
-        console.log('parsing complete:', results);
+      complete: results => {
+        const data = results.data;
         this.setState({
-          data: results
+          data: data
         });
       }
     });
@@ -46,11 +45,19 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
           <FormattedMessage {...messages.header} />
         </h1>
         <div>
-          <button className="btn btn-primary">Click Me!</button>
+          <label className="btn btn-primary">
+            Load CSV <input style={{display: 'none'}} type="file" name="files" onChange={this.handleFileSelect.bind(this)} />
+          </label>
         </div>
-        <div>
-          <input type="file" name="files" onChange={this.handleFileSelect.bind(this)}/>
-        </div>
+        {this.state.data && (
+          <div>
+            <BoxAndViolinChart
+              dataset={this.state.data}
+              xGroup="appID"
+              yValue="meanSendingRateKbps"
+            />
+          </div>
+        )}
       </div>
     );
   }

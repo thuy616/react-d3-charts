@@ -1,0 +1,39 @@
+.svgContainer {
+  background-color: #337ab7;
+  border-radius: 6px;
+  .svgContentContainer {
+    .contentContainerBackgroundRect {
+      fill: #f1f1f1;
+    }
+    .yAxis text {
+      font-size: 10px;
+      color: #fff;
+    }
+    .xAxis text {
+      font-size: 10px;
+      margin-top: 20px;
+      padding-top: 20px;
+      color: #fff;
+      transform:  translateY(2em) rotate(-45deg);
+    }
+    .xAxis {
+      .domain {
+        display: none;
+      }
+    }
+    .violinBoxGroup {
+      .boxPlot {
+        .upperWhiskerFence, .upperWhiskerLine, .lowerWhiskerFence, .lowerWhiskerLine {
+          stroke-width: 2px;
+        }
+        .median {
+          stroke: #fff;
+          stroke-width: 1px;
+        }
+        .medianCircle {
+          fill: #fff
+        }
+      }
+    }
+  }
+}

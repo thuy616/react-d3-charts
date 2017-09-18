@@ -12,7 +12,7 @@ module.exports = (options) => ({
     publicPath: '/',
   }, options.output), // Merge with env dependent settings
   node: {
-    fs: 'empty'
+    fs: 'empty',
   },
   module: {
     loaders: [{

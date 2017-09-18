@@ -16,8 +16,6 @@ import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { useScroll } from 'react-router-scroll';
 import 'sanitize.css/sanitize.css';
-// import './styles/imported-styles.scss';
-
 // Import root app
 import App from 'containers/App';
 
@@ -39,6 +37,8 @@ import configureStore from './store';
 // Import i18n messages
 import { translationMessages } from './i18n';
 
+import './styles/imported-styles.scss';
+import './styles/chart-styles.scss';
 // Import CSS reset and Global Styles
 import './styles/global-styles';
 
@@ -65,7 +65,7 @@ const rootRoute = {
   childRoutes: createRoutes(store),
 };
 
-const render = (messages) => {
+const render = messages => {
   ReactDOM.render(
     <Provider store={store}>
       <LanguageProvider messages={messages}>
@@ -95,14 +95,14 @@ if (module.hot) {
 
 // Chunked polyfill for browsers without Intl support
 if (!window.Intl) {
-  (new Promise((resolve) => {
+  (new Promise(resolve => {
     resolve(import('intl'));
   }))
     .then(() => Promise.all([
       import('intl/locale-data/jsonp/en.js'),
     ]))
     .then(() => render(translationMessages))
-    .catch((err) => {
+    .catch(err => {
       throw err;
     });
 } else {
