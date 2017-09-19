@@ -18,9 +18,7 @@ export default ({
 }: Props) => {
   let scaledX = xScale(data.x);
   let scaledY = yScale(data.y);
-  let barWidth = xScale(data.dx + data.x) - xScale(data.x) + - 1;
-
-  console.log('barWidth: ', barWidth);
+  let barWidth = xScale(data.dx + data.x) - xScale(data.x) - 1;
 
   return barWidth > 0 ? (
     <g

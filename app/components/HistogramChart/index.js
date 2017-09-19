@@ -8,7 +8,6 @@ type Props = {
   height: PropTypes.number,
   values: PropTypes.array.isRequired,
   margin: PropTypes.object,
-  metrics: PropTypes.object.isRequired,
   color: PropTypes.string,
   xLabel: PropTypes.string,
   imposedMax: PropTypes.number.isRequired
@@ -19,7 +18,6 @@ export default({
   height = 400,
   values,
   margin = {top: 20, right: 60, bottom: 60, left: 60},
-  metrics,
   color = 'steelblue',
   xLabel,
   imposedMax
@@ -32,7 +30,6 @@ export default({
   const x = d3.scale.linear().domain([min, max]).range([0, width]);
 
   // calculate number of bins
-  // let numBins = Math.max(Math.round(2 * (metrics.iqr / Math.pow(values.length, 1 / 3))), 50);
   let numBins = Math.ceil(Math.sqrt(values.length));
 
   if (numBins > 30) {
