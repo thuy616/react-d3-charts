@@ -17,6 +17,10 @@ import BoxAndViolinChart from '../../components/BoxAndViolinChart';
 import HistogramChart from '../../components/HistogramChart';
 import HorizonalBarChart from '../../components/HorizonalBarChart';
 import { prepareData } from '../../helpers';
+import ChartWrapper from '../../components/ChartWrapper';
+import H2 from '../../components/H2';
+import H3 from '../../components/H3';
+
 
 export default class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -25,11 +29,15 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
     this.state = {
       data: null,
       selectedAppID: null,
-      selectedBuildKey: null
+      selectedBuildKey: null,
+      preparingData: false
     };
   }
 
   handleFileSelect(e) {
+    this.setState({
+      preparingData: true
+    });
     const file = e.target.files[0];
     Papa.parse(file, {
       delimiter: '\t',
@@ -39,6 +47,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
         const data = prepareData(raw, 'appID', 'meanSendingRateKbps');
         this.setState({
           data: data,
+          preparingData: false,
           selectedAppID: Object.keys(data.groupObjs)[0],
           selectedBuildKey: Object.keys(data.builds)[0]
         });
@@ -70,10 +79,17 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
             Load CSV <input style={{display: 'none'}} type="file" name="files" onChange={this.handleFileSelect.bind(this)} />
           </label>
         </div>
+        {this.state.preparingData === true && (
+          <div className="ball-pulse">
+            <div>{null}</div>
+            <div>{null}</div>
+            <div>{null}</div>
+          </div>
+        )}
         {this.state.data && (
-          <div className="outerContainer">
-
-            <div className="innerContainer">
+          <div className="outer-container">
+            <div className="inner-container">
+              <H2>Group by appID</H2>
               <form>
                 <div className="form-group">
                   <label>Select AppID :</label>
@@ -82,23 +98,35 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
                   </select>
                 </div>
               </form>
-              <div>
-                {/* Histogram Chart */}
+              <ChartWrapper>
+                <H3>Distribution of "meanSendingRateKbps"</H3>
                 <HistogramChart
                   values={this.state.data.groupObjs[this.state.selectedAppID].values}
                   metrics={this.state.data.groupObjs[this.state.selectedAppID].metrics}
                   xLabel="meanSendingRateKbps"
                   imposedMax={2000}
                 />
+              </ChartWrapper>
+              <ChartWrapper>
+                <H3>Distribution of "mediaTypes"</H3>
                 <HorizonalBarChart
                   data={this.state.data.groupObjs[this.state.selectedAppID].mediaTypes}
                   xLabel="count"
                   yLabel="mediaType"
                 />
-              </div>
+              </ChartWrapper>
+              <ChartWrapper>
+                <H3>Distribution of all appIDs</H3>
+                <BoxAndViolinChart
+                  data={this.state.data}
+                  xGroup="appID"
+                  yValue="meanSendingRateKbps"
+                />
+              </ChartWrapper>
             </div>
 
-            <div className="innerContainer">
+            <div className="inner-container">
+              <H2>Group by (buildName,buildVer)</H2>
               <form>
                 <div className="form-group">
                   <label>Select (buildName,buildVer):</label>
@@ -107,25 +135,17 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
                   </select>
                 </div>
               </form>
-              <div>
+              <ChartWrapper>
                 {/* HistogramChart */}
+                <H3>Distribution of "meanSendingRateKbps"</H3>
                 <HistogramChart
                   values={this.state.data.builds[this.state.selectedBuildKey].values}
                   metrics={this.state.data.builds[this.state.selectedBuildKey].metrics}
                   xLabel="meanSendingRateKbps"
                   imposedMax={2000}
                 />
-              </div>
+              </ChartWrapper>
             </div>
-
-            <div className="innerContainer">
-              <BoxAndViolinChart
-                data={this.state.data}
-                xGroup="appID"
-                yValue="meanSendingRateKbps"
-              />
-            </div>
-
           </div>
         )}
       </div>
