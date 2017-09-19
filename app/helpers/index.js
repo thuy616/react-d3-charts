@@ -57,18 +57,41 @@ export const prepareData = (rawData, xGroup, yValue) => {
   rawData.map(entry => {
     let x = entry[xGroup];
     let y = entry[yValue];
+    let mediaType = entry.mediaType;
     // ignore when Y doesn't have any value
-    if (y) {
-      if (data.groupObjs.hasOwnProperty(x)) {
+    if (data.groupObjs.hasOwnProperty(x)) {
+      if (y) {
         data.groupObjs[x].values.push(+y);
-      } else {
-        data.groupObjs[x] = {};
-        data.groupObjs[x].values = [+y];
       }
+      switch (mediaType) {
+        case 'audio':
+          data.groupObjs[x].mediaTypes.audio += 1;
+          break;
+        case 'video':
+          data.groupObjs[x].mediaTypes.video += 1;
+          break;
+        default:
+          data.groupObjs[x].mediaTypes.unknown += 1;
+          break;
+      }
+    } else {
+      data.groupObjs[x] = {};
+      data.groupObjs[x].values = [];
+      if (y) {
+        data.groupObjs[x].values.push(+y);
+      }
+      data.groupObjs[x].mediaTypes = {
+        audio: 0,
+        video: 0,
+        unknown: 0
+      };
     }
   });
+
   // remove appID with less than 20 measurements
   data.groupObjs = _.pickBy(data.groupObjs, group => group.values.length >= 20);
+
+  // calculateMetrics
   Object.keys(data.groupObjs).map(cName => {
     data.groupObjs[cName].values.sort(d3.ascending);
     data.groupObjs[cName].metrics = {};
@@ -76,3 +99,30 @@ export const prepareData = (rawData, xGroup, yValue) => {
   });
   return data;
 };
+
+// export const calculateOutliers = (values, metrics) => {
+//   let extremes = [];
+//   let outliers = [];
+//
+//   values.map(v => {
+//     const out = { value: v };
+//     if (v < metrics.lowerInnerFence) {
+//       if (v < metrics.lowerOuterFence) {
+//         extremes.push(out);
+//       } else {
+//         outliers.push(out);
+//       }
+//     } else if (v > metrics.upperInnerFence) {
+//       if (v > metrics.upperOuterFence) {
+//         extremes.push(out);
+//       } else {
+//         outliers.push(out);
+//       }
+//     }
+//   });
+//
+//   return {
+//     outliers,
+//     extremes
+//   };
+// };
