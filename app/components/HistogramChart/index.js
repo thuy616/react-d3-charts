@@ -32,9 +32,11 @@ export default({
   const x = d3.scale.linear().domain([min, max]).range([0, width]);
 
   // calculate number of bins
-  let numBins = Math.max(Math.round(2 * (metrics.iqr / Math.pow(values.length, 1 / 3))), 50);
-  if (numBins > 50) {
-    numBins = 50; // enforced max bins to be 100
+  // let numBins = Math.max(Math.round(2 * (metrics.iqr / Math.pow(values.length, 1 / 3))), 50);
+  let numBins = Math.ceil(Math.sqrt(values.length));
+
+  if (numBins > 30) {
+    numBins = 30;
   }
   const data = d3.layout.histogram().bins(x.ticks(numBins))(values);
   const yMax = d3.max(data, d => d.y);
