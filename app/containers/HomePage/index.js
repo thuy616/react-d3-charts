@@ -61,7 +61,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
             data: null,
             selectedAppID: null,
             selectedBuildKey: null
-          })
+          });
         }
 
       }
@@ -106,6 +106,14 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
           <div className="outer-container">
             <div className="inner-container">
               <H2>Group by appID</H2>
+              <ChartWrapper>
+                <H3>Distribution of all appIDs</H3>
+                <BoxAndViolinChart
+                  data={this.state.data}
+                  xGroup="appID"
+                  yValue="meanSendingRateKbps"
+                />
+              </ChartWrapper>
               <form>
                 <div className="form-group">
                   <label>Select AppID :</label>
@@ -129,14 +137,6 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
                   data={this.state.data.groupObjs[this.state.selectedAppID].mediaTypes}
                   xLabel="count"
                   yLabel="mediaType"
-                />
-              </ChartWrapper>
-              <ChartWrapper>
-                <H3>Distribution of all appIDs</H3>
-                <BoxAndViolinChart
-                  data={this.state.data}
-                  xGroup="appID"
-                  yValue="meanSendingRateKbps"
                 />
               </ChartWrapper>
             </div>

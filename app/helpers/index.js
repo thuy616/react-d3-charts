@@ -1,5 +1,12 @@
 import _ from 'lodash';
 
+export const formatAsFloat = (d) => {
+  if (d % 1 !== 0) {
+    return d3.format('.2f')(d);
+  }
+  return d3.format('.0f')(d);
+};
+
 // values is sorted array
 const calculateMetrics = (values) => {
   const metrics = {

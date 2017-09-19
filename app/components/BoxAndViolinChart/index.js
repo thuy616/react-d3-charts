@@ -5,17 +5,7 @@ import _ from 'lodash';
 import SVGWithMargin from '../SVGWithMargin';
 import ViolinPlot from '../ViolinPlot';
 import BoxPlot from '../BoxPlot';
-
-
-/**
-* helper functions
-*/
-function formatAsFloat(d) {
-  if (d % 1 !== 0) {
-    return d3.format('.2f')(d);
-  }
-  return d3.format('.0f')(d);
-}
+import { formatAsFloat } from '../../helpers';
 
 function calculateGroupWidth(boxWidth, xScale) {
   // use the boxWidth size (as percentage of possible width) and calculate the actual pixel width to use
