@@ -1,5 +1,5 @@
 .svgContainer {
-  background-color: #337ab7;
+  background-color: #2a0d45;
   border-radius: 6px;
   .svgContentContainer {
     .contentContainerBackgroundRect {
@@ -38,7 +38,15 @@
   }
 }
 
-.histogramBarText {
-  color: #fff;
+.histogram-bar-text, .horizontal-bar-text {
+  color: #FF7F50;
   font-size: 10px;
+}
+
+.chartWrapper {
+  margin-bottom: 20px;
+}
+
+.select-appID {
+  width: auto !important;
 }

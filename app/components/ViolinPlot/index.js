@@ -2,18 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import d3 from 'd3';
 
-function calculateNumberOfBins(metrics, valuesLength) {
-  const iqr = metrics.iqr;
-  const numBins = Math.max(Math.round(2 * (iqr / Math.pow(valuesLength, 1 / 3))), 50);
-  return numBins;
-}
+// function calculateNumberOfBins(metrics, valuesLength) {
+//   const iqr = metrics.iqr;
+//   const numBins = Math.max(Math.round(2 * (iqr / Math.pow(valuesLength, 1 / 3))), 50);
+//   return numBins;
+// }
 
 type Props = {
   cName: PropTypes.string.isRequired, // column name, i.e. unique appID
   color: PropTypes.string.isRequired,
   groupWidth: PropTypes.object.isRequired,
   imposedMax: PropTypes.number.isRequired,
-  metrics: PropTypes.object.isRequired,
   values: PropTypes.array.isRequired,
   xScale: PropTypes.func.isRequired, // x scale of the entire chart
   yScale: PropTypes.func.isRequired, // y scale of the entire chart
@@ -25,13 +24,11 @@ export default ({
   groupWidth,
   imposedMax,
   values,
-  metrics,
   xScale,
   yScale
 }: Props) => {
-  // dynamically calculate number of Bins
-  // instead of using uniformly number of bins
-  let histogramData = d3.layout.histogram().bins(calculateNumberOfBins(metrics, values.length)).frequency(0)(values);
+  // using uniformly number of bins
+  let histogramData = d3.layout.histogram().bins(20).frequency(0)(values);
   const leftBound = xScale(cName) + groupWidth.left;
   const rightBound = xScale(cName) + groupWidth.right;
   const trueWidth = (rightBound - leftBound) / 2;

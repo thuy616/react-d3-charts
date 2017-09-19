@@ -15,6 +15,7 @@ import messages from './messages';
 import Papa from 'papaparse';
 import BoxAndViolinChart from '../../components/BoxAndViolinChart';
 import HistogramChart from '../../components/HistogramChart';
+import HorizonalBarChart from '../../components/HorizonalBarChart';
 import { prepareData } from '../../helpers';
 
 export default class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
@@ -68,7 +69,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
               <form>
                 <div className="form-group">
                   <label>Select AppID :</label>
-                  <select className="form-control" onChange={this.handleAppIDChange.bind(this)}>
+                  <select className="form-control select-appID" onChange={this.handleAppIDChange.bind(this)}>
                     {Object.keys(this.state.data.groupObjs).map(appID => (<option key={appID}>{appID}</option>))}
                   </select>
                 </div>
@@ -79,8 +80,13 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
                   values={this.state.data.groupObjs[this.state.selectedAppID].values}
                   metrics={this.state.data.groupObjs[this.state.selectedAppID].metrics}
                   xLabel="meanSendingRateKbps"
+                  imposedMax={2000}
                 />
-
+                <HorizonalBarChart
+                  data={this.state.data.groupObjs[this.state.selectedAppID].mediaTypes}
+                  xLabel="count"
+                  yLabel="mediaType"
+                />
               </div>
             </div>
 

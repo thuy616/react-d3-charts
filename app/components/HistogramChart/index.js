@@ -10,7 +10,8 @@ type Props = {
   margin: PropTypes.object,
   metrics: PropTypes.object.isRequired,
   color: PropTypes.string,
-  xLabel: PropTypes.string
+  xLabel: PropTypes.string,
+  imposedMax: PropTypes.number.isRequired
 }
 
 export default({
@@ -20,10 +21,14 @@ export default({
   margin = {top: 20, right: 60, bottom: 60, left: 60},
   metrics,
   color = 'steelblue',
-  xLabel
+  xLabel,
+  imposedMax
 }: Props) => {
-  const max = d3.max(values);
+  let max = d3.max(values);
   const min = d3.min(values);
+  if (max > imposedMax) {
+    max = imposedMax;
+  }
   const x = d3.scale.linear().domain([min, max]).range([0, width]);
 
   // calculate number of bins
@@ -45,7 +50,7 @@ export default({
                 .orient('bottom');
 
   return (
-    <div className="histogramChartWrapper">
+    <div className="chartWrapper">
       <SVGWithMargin
         className="svgContainer"
         contentContainerBackgroundRectClassName="contentContainerBackgroundRect"
