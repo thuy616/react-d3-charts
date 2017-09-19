@@ -30,7 +30,8 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
       data: null,
       selectedAppID: null,
       selectedBuildKey: null,
-      preparingData: false
+      preparingData: false,
+      error: null
     };
   }
 
@@ -45,12 +46,24 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
       complete: results => {
         const raw = results.data;
         const data = prepareData(raw, 'appID', 'meanSendingRateKbps');
-        this.setState({
-          data: data,
-          preparingData: false,
-          selectedAppID: Object.keys(data.groupObjs)[0],
-          selectedBuildKey: Object.keys(data.builds)[0]
-        });
+        if (Object.keys(data.groupObjs).length > 0 && Object.keys(data.builds).length > 0) {
+          this.setState({
+            data: data,
+            preparingData: false,
+            selectedAppID: Object.keys(data.groupObjs)[0],
+            selectedBuildKey: Object.keys(data.builds)[0],
+            error: null
+          });
+        } else {
+          this.setState({
+            preparingData: false,
+            error: 'Invalid CSV',
+            data: null,
+            selectedAppID: null,
+            selectedBuildKey: null
+          })
+        }
+
       }
     });
   }
@@ -85,6 +98,9 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
             <div>{null}</div>
             <div>{null}</div>
           </div>
+        )}
+        {this.state.error && (
+          <div className="alert alert-danger"><strong>Error!</strong> {this.state.error}</div>
         )}
         {this.state.data && (
           <div className="outer-container">
