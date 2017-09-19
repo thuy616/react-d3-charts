@@ -65,3 +65,15 @@
 .inner-container {
   margin: 30px 0;
 }
+
+.tooltip {
+  position: absolute;
+  text-align: left;
+  padding: 3px;
+  font-size: 10px;
+  background: lightcyan;
+  border: 0px;
+  border-radius: 1px;
+  pointer-events: none;
+  opacity: 0.85;
+}

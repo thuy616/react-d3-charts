@@ -35,4 +35,8 @@ injectGlobal`
   .ball-pulse > div {
     background-color: #500c8c;
   }
+
+  .alert {
+    margin-top: 20px;
+  }
 `;
