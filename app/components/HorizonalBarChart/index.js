@@ -38,32 +38,30 @@ export default ({
   const yAxis = d3.svg.axis().scale(y).tickSize(0).orient('left');
 
   return (
-    <div className="chartWrapper">
-      <SVGWithMargin
-        className="svgContainer"
-        contentContainerBackgroundRectClassName="contentContainerBackgroundRect"
-        contentContainerGroupClassName="svgContentContainer"
-        height={height}
-        margin={margin}
-        width={width}>
+    <SVGWithMargin
+      className="svgContainer"
+      contentContainerBackgroundRectClassName="contentContainerBackgroundRect"
+      contentContainerGroupClassName="svgContentContainer"
+      height={height}
+      margin={margin}
+      width={width}>
 
-        <g
-          className="yAxis"
-          ref={node => d3.select(node).call(yAxis)}>
-          <text className="axisLabel" textAnchor="end" x={12} y={0} dy={'-2em'} transform="rotate(-90)">{yLabel}</text>
-        </g>
+      <g
+        className="yAxis"
+        ref={node => d3.select(node).call(yAxis)}>
+        <text className="axisLabel" textAnchor="end" x={12} y={0} dy={'-2em'} transform="rotate(-90)">{yLabel}</text>
+      </g>
 
-        {aData.map((d, i) =>
-          <Bar
-            key={i}
-            data={d}
-            xScale={x}
-            yScale={y}
-            colorScale={colorScale}
-          />
-        )}
+      {aData.map((d, i) =>
+        <Bar
+          key={i}
+          data={d}
+          xScale={x}
+          yScale={y}
+          colorScale={colorScale}
+        />
+      )}
 
-      </SVGWithMargin>
-    </div>
+    </SVGWithMargin>
   );
 };

@@ -223,6 +223,7 @@
     "intl": "1.2.5",
     "invariant": "2.2.2",
     "ip": "1.1.4",
+    "loaders.css": "^0.1.2",
     "lodash": "^4.17.4",
     "minimist": "1.2.0",
     "node-sass": "^4.5.3",

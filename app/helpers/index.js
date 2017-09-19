@@ -52,12 +52,23 @@ const calculateMetrics = (values) => {
 export const prepareData = (rawData, xGroup, yValue) => {
   let data = {
     rawData: rawData,
-    groupObjs: {}
+    groupObjs: {},
+    builds: {}
   };
   rawData.map(entry => {
-    let x = entry[xGroup];
+
+    // meanSendingRateKbps
     let y = entry[yValue];
+
+    // group by appID
+    let x = entry[xGroup];
+
+    // group by buildName, buildVer
+    let buildKey = `${entry.buildName},${entry.buildVer}`;
+
+    // aggregate mediaType
     let mediaType = entry.mediaType;
+
     // ignore when Y doesn't have any value
     if (data.groupObjs.hasOwnProperty(x)) {
       if (y) {
@@ -86,17 +97,34 @@ export const prepareData = (rawData, xGroup, yValue) => {
         unknown: 0
       };
     }
+
+    if (y) {
+      if (data.builds.hasOwnProperty(buildKey)) {
+        data.builds[buildKey].values.push(+y);
+      } else {
+        data.builds[buildKey] = {};
+        data.builds[buildKey].values = [+y];
+      }
+    }
   });
 
   // remove appID with less than 20 measurements
   data.groupObjs = _.pickBy(data.groupObjs, group => group.values.length >= 20);
 
-  // calculateMetrics
+  // calculateMetrics for appID groups
   Object.keys(data.groupObjs).map(cName => {
     data.groupObjs[cName].values.sort(d3.ascending);
     data.groupObjs[cName].metrics = {};
     data.groupObjs[cName].metrics = calculateMetrics(data.groupObjs[cName].values);
   });
+
+  // calculate metrics for (buildName, buildVer) groups
+  Object.keys(data.builds).map(buildKey => {
+    data.builds[buildKey].values.sort(d3.ascending);
+    data.builds[buildKey].metrics = {};
+    data.builds[buildKey].metrics = calculateMetrics(data.builds[buildKey].values);
+  });
+
   return data;
 };
 

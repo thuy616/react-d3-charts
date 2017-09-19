@@ -50,36 +50,34 @@ export default({
                 .orient('bottom');
 
   return (
-    <div className="chartWrapper">
-      <SVGWithMargin
-        className="svgContainer"
-        contentContainerBackgroundRectClassName="contentContainerBackgroundRect"
-        contentContainerGroupClassName="svgContentContainer"
-        height={height}
-        margin={margin}
-        width={width}>
+    <SVGWithMargin
+      className="svgContainer"
+      contentContainerBackgroundRectClassName="contentContainerBackgroundRect"
+      contentContainerGroupClassName="svgContentContainer"
+      height={height}
+      margin={margin}
+      width={width}>
 
-        <g
-          className="xAxis"
-          ref={node => d3.select(node).call(xAxis)}
-          style={{
-            transform: `translateY(${height}px)`,
-          }}>
-          <text className="axisLabel" textAnchor="end" x={width / 2} y={0} dy="4.5em" style={{transform: 'rotate(0)'}} >{xLabel}</text>
-        </g>
+      <g
+        className="xAxis"
+        ref={node => d3.select(node).call(xAxis)}
+        style={{
+          transform: `translateY(${height}px)`,
+        }}>
+        <text className="axisLabel" textAnchor="end" x={width / 2} y={0} dy="4.5em" style={{transform: 'rotate(0)'}} >{xLabel}</text>
+      </g>
 
-        {data.map((d, i) => (
-          <Bar
-            key={i}
-            data={d}
-            xScale={x}
-            yScale={y}
-            height={height}
-            colorScale={colorScale}
-          />
-        ))}
+      {data.map((d, i) => (
+        <Bar
+          key={i}
+          data={d}
+          xScale={x}
+          yScale={y}
+          height={height}
+          colorScale={colorScale}
+        />
+      ))}
 
-      </SVGWithMargin>
-    </div>
+    </SVGWithMargin>
   );
 };
