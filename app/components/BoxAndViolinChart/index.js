@@ -34,6 +34,20 @@ class BoxAndViolinChart extends Component {
     width: 3000,
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      showViolinPlot: false
+    };
+  }
+
+  handleShowViolinBtnClick() {
+    let currentState = this.state.showViolinPlot;
+    this.setState({
+      showViolinPlot: !currentState
+    });
+  }
+
   render() {
     const { data, yValue, height, width, margin } = this.props;
     const colorFunc = d3.scale.category20();
@@ -61,6 +75,7 @@ class BoxAndViolinChart extends Component {
                 .innerTickSize(-width + (margin.right + margin.left));
     return (
       <div style={{ height: `${height + margin.top + margin.bottom}px`, width: `${width + margin.left + margin.right}px`, marginTop: '10px' }}>
+        <button className="btn btn-default" onClick={this.handleShowViolinBtnClick.bind(this)}>Show/Hide Violin Plot</button>
         <SVGWithMargin
           className="svgContainer"
           contentContainerBackgroundRectClassName="contentContainerBackgroundRect"
@@ -86,16 +101,17 @@ class BoxAndViolinChart extends Component {
             return (
               <g className="violinBoxGroup" key={cName}>
 
-                {/* Draw violin plots */}
-                <ViolinPlot
-                  cName={cName}
-                  values={values}
-                  metrics={metrics}
-                  xScale={xScale}
-                  yScale={yScale}
-                  imposedMax={max}
-                  groupWidth={calculateGroupWidth(100, xScale)}
-                />
+                {this.state.showViolinPlot &&
+                  <ViolinPlot
+                    cName={cName}
+                    values={values}
+                    xScale={xScale}
+                    yScale={yScale}
+                    imposedMax={max}
+                    groupWidth={calculateGroupWidth(100, xScale)}
+                    color="#b5b5b5"
+                  />
+                }
 
                 {/* Draw box plots */}
                 <BoxPlot

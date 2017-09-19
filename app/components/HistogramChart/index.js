@@ -31,7 +31,6 @@ export default({
 
   // calculate number of bins
   let numBins = Math.ceil(Math.sqrt(values.length));
-
   if (numBins > 30) {
     numBins = 30;
   }
