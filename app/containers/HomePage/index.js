@@ -25,6 +25,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
     this.state = {
       data: null,
       selectedAppID: null,
+      selectedBuildKey: null
     };
   }
 
@@ -38,7 +39,8 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
         const data = prepareData(raw, 'appID', 'meanSendingRateKbps');
         this.setState({
           data: data,
-          selectedAppID: Object.keys(data.groupObjs)[0]
+          selectedAppID: Object.keys(data.groupObjs)[0],
+          selectedBuildKey: Object.keys(data.builds)[0]
         });
       }
     });
@@ -47,6 +49,12 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
   handleAppIDChange(e) {
     this.setState({
       selectedAppID: e.target.value
+    });
+  }
+
+  handleBuildKeyChange(e) {
+    this.setState({
+      selectedBuildKey: e.target.value
     });
   }
 
@@ -86,6 +94,26 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
                   data={this.state.data.groupObjs[this.state.selectedAppID].mediaTypes}
                   xLabel="count"
                   yLabel="mediaType"
+                />
+              </div>
+            </div>
+
+            <div className="innerContainer">
+              <form>
+                <div className="form-group">
+                  <label>Select (buildName,buildVer):</label>
+                  <select className="form-control select-appID" onChange={this.handleBuildKeyChange.bind(this)}>
+                    {Object.keys(this.state.data.builds).map(buildKey => <option key={buildKey}>{buildKey}</option>)}
+                  </select>
+                </div>
+              </form>
+              <div>
+                {/* HistogramChart */}
+                <HistogramChart
+                  values={this.state.data.builds[this.state.selectedBuildKey].values}
+                  metrics={this.state.data.builds[this.state.selectedBuildKey].metrics}
+                  xLabel="meanSendingRateKbps"
+                  imposedMax={2000}
                 />
               </div>
             </div>
