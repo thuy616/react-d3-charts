@@ -134,30 +134,3 @@ export const prepareData = (rawData, xGroup, yValue) => {
 
   return data;
 };
-
-// export const calculateOutliers = (values, metrics) => {
-//   let extremes = [];
-//   let outliers = [];
-//
-//   values.map(v => {
-//     const out = { value: v };
-//     if (v < metrics.lowerInnerFence) {
-//       if (v < metrics.lowerOuterFence) {
-//         extremes.push(out);
-//       } else {
-//         outliers.push(out);
-//       }
-//     } else if (v > metrics.upperInnerFence) {
-//       if (v > metrics.upperOuterFence) {
-//         extremes.push(out);
-//       } else {
-//         outliers.push(out);
-//       }
-//     }
-//   });
-//
-//   return {
-//     outliers,
-//     extremes
-//   };
-// };

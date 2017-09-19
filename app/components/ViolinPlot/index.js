@@ -2,12 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import d3 from 'd3';
 
-// function calculateNumberOfBins(metrics, valuesLength) {
-//   const iqr = metrics.iqr;
-//   const numBins = Math.max(Math.round(2 * (iqr / Math.pow(valuesLength, 1 / 3))), 50);
-//   return numBins;
-// }
-
 type Props = {
   cName: PropTypes.string.isRequired, // column name, i.e. unique appID
   color: PropTypes.string.isRequired,
@@ -27,8 +21,12 @@ export default ({
   xScale,
   yScale
 }: Props) => {
-  // using uniformly number of bins
-  let histogramData = d3.layout.histogram().bins(20).frequency(0)(values);
+  let numBins = Math.ceil(Math.sqrt(values.length));
+  if (numBins > 30) {
+    numBins = 30;
+  }
+
+  let histogramData = d3.layout.histogram().bins(numBins).frequency(1)(values);
   const leftBound = xScale(cName) + groupWidth.left;
   const rightBound = xScale(cName) + groupWidth.right;
   const trueWidth = (rightBound - leftBound) / 2;
@@ -49,14 +47,14 @@ export default ({
   return (
     <g className="violinPlot">
       {/* left */}
-      <g style={{transform: `rotate(90,0,0) translate(0, ${-leftBound}) scale(1, -1)`}}>
+      <g style={{transform: `rotate(90deg) translate(0, ${-leftBound}px) scale(1, -1)`}}>
         <path className="area" d={areaFill} style={{fill: `${color}`}} />
-        <path className="line" d={linePath} style={{ stroke: '#000', strokeWidth: '2px'}} />
+        <path className="line" d={linePath} style={{ stroke: '#b1b1b1', strokeWidth: '1px', color: 'transparent'}} />
       </g>
       {/* right */}
-      <g style={{transform: `rotate(90,0,0), translate(0, ${-rightBound})`}}>
-        <path className="area" d={areaFill} style={{fill: 'rgba(255,165,0,0.5)'}} />
-        <path className="line" d={linePath} style={{fill: 'red', opacity: '.5'}} />
+      <g style={{transform: `rotate(90deg) translate(0, ${-rightBound}px)`}}>
+        <path className="area" d={areaFill} style={{fill: `${color}`}} />
+        <path className="line" d={linePath} style={{ stroke: '#b1b1b1', strokeWidth: '1px', color: 'transparent'}} />
       </g>
     </g>
   );
