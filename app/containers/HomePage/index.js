@@ -114,6 +114,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
                   yValue="meanSendingRateKbps"
                 />
               </ChartWrapper>
+              <div style={{ paddingTop: '30px' }}>
               <form>
                 <div className="form-group">
                   <label>Select AppID :</label>
@@ -122,6 +123,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
                   </select>
                 </div>
               </form>
+              </div>
               <ChartWrapper>
                 <H3>Distribution of "meanSendingRateKbps"</H3>
                 <HistogramChart
