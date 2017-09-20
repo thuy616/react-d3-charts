@@ -7,7 +7,7 @@ export default class BoxPlot extends Component {
   static propTypes = {
     cName: PropTypes.string.isRequired,
     color: PropTypes.string.isRequired,
-    groupWidth: PropTypes.object.isRequired,
+    groupHeight: PropTypes.object.isRequired,
     metrics: PropTypes.object.isRequired,
     values: PropTypes.array.isRequired,
     xScale: PropTypes.func.isRequired,
@@ -55,15 +55,16 @@ export default class BoxPlot extends Component {
   }
 
   render() {
-    const { cName, color, groupWidth, metrics, xScale, yScale } = this.props;
-    const leftBound = xScale(cName) + groupWidth.left;
-    const rightBound = xScale(cName) + groupWidth.right;
-    const middle = xScale(cName) + groupWidth.middle;
+    const { cName, color, groupHeight, metrics, xScale, yScale } = this.props;
+    const bottomBound = yScale(cName) + groupHeight.bottom;
+    const topBound = yScale(cName) + groupHeight.top;
+    const middle = yScale(cName) + groupHeight.middle;
+
 
     let tempMetrics = {};
     Object.keys(metrics).map(key => {
       tempMetrics[key] = null;
-      tempMetrics[key] = yScale(metrics[key]);
+      tempMetrics[key] = xScale(metrics[key]);
     });
 
     // render box
@@ -75,57 +76,57 @@ export default class BoxPlot extends Component {
         onMouseMove={this.handleOnMouseMove.bind(this)}>
         <rect
           className="box"
-          x={leftBound}
-          width={rightBound - leftBound}
-          y={tempMetrics.quartile3}
-          height={-tempMetrics.quartile3 + tempMetrics.quartile1}
+          x={tempMetrics.quartile1}
+          height={bottomBound - topBound}
+          y={bottomBound}
+          width={tempMetrics.quartile3 - tempMetrics.quartile1}
           rx={1}
           ry={1}
-          style={{ fill: `${color}` }}
+          style={{ fill: `${color}`, transform: `translateY(${-groupHeight.bottom + groupHeight.top}px)` }}
         />
         <line
           className="median"
-          x1={leftBound}
-          x2={rightBound}
-          y1={tempMetrics.median}
-          y2={tempMetrics.median}
+          x1={tempMetrics.median}
+          x2={tempMetrics.median}
+          y1={topBound}
+          y2={bottomBound}
         />
         <circle
           className="medianCircle"
           r={3}
-          cx={middle}
-          cy={tempMetrics.median}
+          cy={middle}
+          cx={tempMetrics.median}
         />
         <line
           className="upperWhiskerFence"
-          x1={leftBound}
-          x2={rightBound}
-          y1={tempMetrics.upperInnerFence}
-          y2={tempMetrics.upperInnerFence}
+          x1={tempMetrics.upperInnerFence}
+          x2={tempMetrics.upperInnerFence}
+          y1={topBound}
+          y2={bottomBound}
           style={{ stroke: `${color}` }}
         />
         <line
           className="upperWhiskerLine"
-          x1={middle}
-          x2={middle}
-          y1={tempMetrics.quartile3}
-          y2={tempMetrics.upperInnerFence}
+          x1={tempMetrics.quartile3}
+          x2={tempMetrics.upperInnerFence}
+          y1={middle}
+          y2={middle}
           style={{ stroke: `${color}` }}
         />
         <line
           className="lowerWhiskerFence"
-          x1={leftBound}
-          x2={rightBound}
-          y1={tempMetrics.lowerInnerFence}
-          y2={tempMetrics.lowerInnerFence}
+          x1={tempMetrics.lowerInnerFence}
+          x2={tempMetrics.lowerInnerFence}
+          y1={topBound}
+          y2={bottomBound}
           style={{ stroke: `${color}` }}
         />
         <line
           className="lowerWhiskerLine"
-          x1={middle}
-          x2={middle}
-          y1={tempMetrics.quartile1}
-          y2={tempMetrics.lowerInnerFence}
+          x1={tempMetrics.quartile1}
+          x2={tempMetrics.lowerInnerFence}
+          y1={middle}
+          y2={middle}
           style={{ stroke: `${color}` }}
         />
       </g>

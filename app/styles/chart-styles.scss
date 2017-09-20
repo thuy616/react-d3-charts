@@ -14,7 +14,7 @@
       margin-top: 20px;
       padding-top: 20px;
       color: #fff;
-      transform:  translateY(2em) rotate(-45deg);
+      transform: rotate(-45deg);
     }
     .xAxis {
       .domain {
@@ -79,7 +79,7 @@
 }
 
 rect.box {
-  fill-opacity: 0.85;
+  fill-opacity: 0.8;
 }
 
 .btn-default {

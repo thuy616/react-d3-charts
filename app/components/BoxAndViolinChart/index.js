@@ -7,14 +7,14 @@ import ViolinPlot from '../ViolinPlot';
 import BoxPlot from '../BoxPlot';
 import { formatAsFloat } from '../../helpers';
 
-function calculateGroupWidth(boxWidth, xScale) {
+function calculateGroupHeight(boxHeight, yScale) {
   // use the boxWidth size (as percentage of possible width) and calculate the actual pixel width to use
-  let boxSize = { left: null, right: null, middle: null };
-  const width = xScale.rangeBand() * (boxWidth / 100);
-  const padding = (xScale.rangeBand() - width) / 2;
-  boxSize.middle = xScale.rangeBand() / 2;
-  boxSize.left = padding;
-  boxSize.right = boxSize.left + width;
+  let boxSize = { top: null, bottom: null, middle: null };
+  const height = yScale.rangeBand() * (boxHeight / 100);
+  const padding = (yScale.rangeBand() - height) / 2;
+  boxSize.middle = yScale.rangeBand() / 2;
+  boxSize.top = padding;
+  boxSize.bottom = boxSize.top + height;
   return boxSize;
 }
 
@@ -24,14 +24,14 @@ class BoxAndViolinChart extends Component {
     data: PropTypes.object.isRequired,
     height: PropTypes.number,
     margin: PropTypes.object,
+    valueName: PropTypes.string.isRequired,
     width: PropTypes.number, // optional because responsiveness
-    yValue: PropTypes.string.isRequired,
   }
 
   static defaultProps = {
-    height: 600,
+    height: 3000,
     margin: { top: 60, right: 60, bottom: 60, left: 60 },
-    width: 3000,
+    width: 800,
   }
 
   constructor(props) {
@@ -49,30 +49,30 @@ class BoxAndViolinChart extends Component {
   }
 
   render() {
-    const { data, yValue, height, width, margin } = this.props;
+    const { data, valueName, height, width, margin } = this.props;
     const colorFunc = d3.scale.category20();
     // axes labels:
-    const yLabel = yValue;
+    const xLabel = valueName;
     const yFormatter = formatAsFloat;
 
-    const imposedMax = 2000;
-    const trueMax = d3.max(_.map(data.rawData, d => +d[yValue]));
+    const imposedMax = 1800;
+    const trueMax = d3.max(_.map(data.rawData, d => +d[valueName]));
     let max = imposedMax > trueMax ? trueMax : imposedMax;
     const domain = [0, max]; // coerce to number value e.g. 5 instead of string "5"
-    const yScale = d3.scale.linear()
+    const xScale = d3.scale.linear()
                    .domain(domain)
-                   .range([height, 0])
+                   .range([0, width])
                    .clamp(true);
-    const xScale = d3.scale.ordinal().domain(Object.keys(data.groupObjs)).rangeBands([0, width]);
+    const yScale = d3.scale.ordinal().domain(Object.keys(data.groupObjs)).rangeBands([0, height]);
 
     // build axes
-    const xAxis = d3.svg.axis().scale(xScale).orient('bottom').tickSize(5);
-    const yAxis = d3.svg.axis()
+    const yAxis = d3.svg.axis().scale(xScale).orient('top').tickSize(5);
+    const xAxis = d3.svg.axis()
                 .scale(yScale)
                 .orient('left')
                 .tickFormat(yFormatter)
                 .outerTickSize(0)
-                .innerTickSize(-width + (margin.right + margin.left));
+                .innerTickSize(-height + (margin.top + margin.bottom));
     return (
       <div style={{ height: `${height + margin.top + margin.bottom}px`, width: `${width + margin.left + margin.right}px`, marginTop: '10px' }}>
         <button className="btn btn-default" onClick={this.handleShowViolinBtnClick.bind(this)}>Show/Hide Violin Plot</button>
@@ -86,21 +86,16 @@ class BoxAndViolinChart extends Component {
           {/* Draw Axes, ticks and labels */}
           <g
             className="xAxis"
-            ref={node => d3.select(node).call(xAxis)}
-            style={{
-              transform: `translateY(${height}px)`,
-            }}
-          />
-          <g className="yAxis" ref={node => d3.select(node).call(yAxis)}>
-            <text className="axisLabel" textAnchor="end" y={6} dy={'-4em'} transform="rotate(-90)">{yLabel}</text>
+            ref={node => d3.select(node).call(xAxis)}>
+            <text className="axisLabel" textAnchor="middle" x={width / 2} y={0} dy={'-4em'} style={{transform: 'rotate(0deg)'}}>{xLabel}</text>
           </g>
+          <g className="yAxis" ref={node => d3.select(node).call(yAxis)} />
+
           {Object.keys(data.groupObjs).map(cName => {
             const values = data.groupObjs[cName].values;
             const metrics = data.groupObjs[cName].metrics;
-
             return (
               <g className="violinBoxGroup" key={cName}>
-
                 {this.state.showViolinPlot &&
                   <ViolinPlot
                     cName={cName}
@@ -108,25 +103,22 @@ class BoxAndViolinChart extends Component {
                     xScale={xScale}
                     yScale={yScale}
                     imposedMax={max}
-                    groupWidth={calculateGroupWidth(100, xScale)}
-                    color="#b5b5b5"
+                    groupHeight={calculateGroupHeight(90, yScale)}
+                    color="#808080"
                   />
                 }
-
-                {/* Draw box plots */}
                 <BoxPlot
                   cName={cName}
                   values={values}
                   metrics={metrics}
                   xScale={xScale}
                   yScale={yScale}
-                  groupWidth={calculateGroupWidth(30, xScale)}
+                  groupHeight={calculateGroupHeight(30, yScale)}
                   color={colorFunc(cName)}
-                  xLabel={yValue}
+                  yLabel={valueName}
                 />
               </g>
             );
-
           })}
 
         </SVGWithMargin>

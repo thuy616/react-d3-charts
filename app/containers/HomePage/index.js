@@ -111,18 +111,18 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
                 <BoxAndViolinChart
                   data={this.state.data}
                   xGroup="appID"
-                  yValue="meanSendingRateKbps"
+                  valueName="meanSendingRateKbps"
                 />
               </ChartWrapper>
               <div style={{ paddingTop: '30px' }}>
-              <form>
-                <div className="form-group">
-                  <label>Select AppID :</label>
-                  <select className="form-control select-appID" onChange={this.handleAppIDChange.bind(this)}>
-                    {Object.keys(this.state.data.groupObjs).map(appID => (<option key={appID}>{appID}</option>))}
-                  </select>
-                </div>
-              </form>
+                <form>
+                  <div className="form-group">
+                    <label>Select AppID :</label>
+                    <select className="form-control select-appID" onChange={this.handleAppIDChange.bind(this)}>
+                      {Object.keys(this.state.data.groupObjs).map(appID => (<option key={appID}>{appID}</option>))}
+                    </select>
+                  </div>
+                </form>
               </div>
               <ChartWrapper>
                 <H3>Distribution of "meanSendingRateKbps"</H3>
@@ -130,7 +130,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
                   values={this.state.data.groupObjs[this.state.selectedAppID].values}
                   metrics={this.state.data.groupObjs[this.state.selectedAppID].metrics}
                   xLabel="meanSendingRateKbps"
-                  imposedMax={2000}
+                  imposedMax={1800}
                 />
               </ChartWrapper>
               <ChartWrapper>
@@ -160,7 +160,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
                   values={this.state.data.builds[this.state.selectedBuildKey].values}
                   metrics={this.state.data.builds[this.state.selectedBuildKey].metrics}
                   xLabel="meanSendingRateKbps"
-                  imposedMax={2000}
+                  imposedMax={1800}
                 />
               </ChartWrapper>
             </div>
